@@ -8,12 +8,25 @@
 
 namespace Framework;
 
+
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class App
 {
+    private $modules = [];
+    /**
+     * App constructor.
+     * @param string[] $modules Liste des modules à charger
+     */
+    public function __construct(array $modules = [])
+    {
+        $router =  new Router();
+        foreach($modules as $module){
+            $this->modules[] = $module($router);
+        }
+    }
 
     public function run(ServerRequestInterface $request): ResponseInterface
     {
